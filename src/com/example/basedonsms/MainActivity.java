@@ -2,19 +2,18 @@ package com.example.basedonsms;
 
 import java.util.Locale;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
@@ -57,6 +56,19 @@ public class MainActivity extends FragmentActivity {
 		return true;
 	}
 
+	public void startApp(View view) {
+		 Intent intent = new Intent(this, SMSActivity.class);
+		//Intent intent = new Intent(this, MyTestActivity.class);
+		startActivity(intent);
+		finish();
+	}
+	public void startMyTest(View view) {
+		// Intent intent = new Intent(this, SMSActivity.class);
+		Intent intent = new Intent(this, SMS_Test_Activity.class);
+		startActivity(intent);
+		finish();
+	}	
+
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -81,8 +93,8 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
-			return 3;
+			// Show 4 total pages.
+			return 4;
 		}
 
 		@Override
@@ -95,6 +107,8 @@ public class MainActivity extends FragmentActivity {
 				return getString(R.string.title_section2).toUpperCase(l);
 			case 2:
 				return getString(R.string.title_section3).toUpperCase(l);
+			case 3:
+				return getString(R.string.title_section4).toUpperCase(l);
 			}
 			return null;
 		}
@@ -117,13 +131,36 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main_dummy,
-					container, false);
+			int section_i = getArguments().getInt(ARG_SECTION_NUMBER);
+			View rootView;
+			if (section_i == 4) {
+				rootView = inflater.inflate(R.layout.fragment_main_dummy_special,
+						container, false);
+			} else {
+				rootView = inflater.inflate(R.layout.fragment_main_dummy,
+						container, false);
+			}
 			TextView dummyTextView = (TextView) rootView
 					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
+			dummyTextView.setText(getDummyText());
+			// Button bt = (Button)rootView.findViewById(R.id.button1);
+			// bt.setOnClickListener()
 			return rootView;
+		}
+
+		private String getDummyText() {
+			int section_i = getArguments().getInt(ARG_SECTION_NUMBER);
+			switch (section_i) {
+			case 1:
+				return "1. 基本的SMS功能";
+			case 2:
+				return "2. 通过短信创建闹钟、待办事宜";
+			case 3:
+				return "3. 通过虚拟短信控制手机——类似与命令提示符";
+			case 4:
+				return "4. 专门为测试提供的Activity";
+			}
+			return "";
 		}
 	}
 
